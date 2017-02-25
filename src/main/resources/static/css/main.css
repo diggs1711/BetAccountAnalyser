@@ -91,3 +91,15 @@ ul {
     width: 100%;
     height: 500px;
 }
+
+.navbar-brand {
+    color: #fff;
+}
+
+.navbar {
+    border-radius: 0px !important;
+}
+
+.glyphicon {
+    padding: 5px;
+}

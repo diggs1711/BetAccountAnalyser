@@ -66,6 +66,7 @@
         betStake: 0.0,
         betReturn: 0.0,
         bets: 0,
+        totalNet: 0.0,
 
         calculateProfit: function(bet) {
 
@@ -79,7 +80,10 @@
             this.totalStaked += this.betStake;
             this.totalReturned += this.betReturn;
 
-            this.profit += (-this.betStake + this.betReturn);
+            this.profit = (-this.betStake + this.betReturn);
+
+            this.totalNet += this.profit;
+            return this.profit.toFixed(2);
         }
 
     };
@@ -235,16 +239,13 @@
         addBetToDisplay: function(bet) {
             var row = this.createNewRow();
 
-            for (var i = 0; i < 6; i++) {
-
-            }
-
             var dateCell = row.insertCell(0);
             var eventCell = row.insertCell(1);
             var marketCell = row.insertCell(2);
             var stakeCell = row.insertCell(3);
-            var returnCell = row.insertCell(4)
-            var resultCell = row.insertCell(5);
+            var returnCell = row.insertCell(4);
+            var netCell = row.insertCell(5)
+            var resultCell = row.insertCell(6);
 
             var dateText = document.createTextNode(bet.date);
             dateCell.className = "bet-date";
@@ -293,16 +294,39 @@
             var returnAmount = document.createTextNode(bet.return);
             returnCell.className = "bet-return";
 
+            var netAmount = document.createTextNode(bet.net);
+
+            if (this.isNetPostiveOrNegative(bet.net)) {            
+                netCell.className = "bet-net positive";
+                var p = document.createElement("span");
+                p.className = "glyphicon glyphicon-arrow-up";
+
+                netCell.appendChild(p);
+            } else {
+                netCell.className = "bet-net negative";
+
+                var n = document.createElement("span");
+                n.className = "glyphicon glyphicon-arrow-down";
+                
+                netCell.appendChild(n);
+            }
+            
             dateCell.appendChild(dateText);
             eventCell.appendChild(eventText);
             marketCell.appendChild(marketText);
             stakeCell.appendChild(stakeAmount);
+            netCell.appendChild(netAmount);
             returnCell.appendChild(returnAmount);
 
         },
 
+        isNetPostiveOrNegative: function(net){
+            var n = parseFloat(net);
+            return n > 0.0 ? true : false;
+        },
+
         createPanelView: function(d) {
-            var numBets = this.statsPanel.createStatDisplayElement("# Bets", betModel.getNumberOfBets());
+            var numBets = this.statsPanel.createStatDisplayElement("Bets", betModel.getNumberOfBets());
             this.statsPanel.panelBody.appendChild(numBets);
 
             var totalStaked = this.statsPanel.createStatDisplayElement("Staked(€)", betModel.getTotalAmountStaked());
@@ -310,6 +334,9 @@
 
             var totalReturned = this.statsPanel.createStatDisplayElement("Returned(€)", betModel.getTotalAmountReturned());
             this.statsPanel.panelBody.appendChild(totalReturned);
+
+            var totalNet = this.statsPanel.createStatDisplayElement("Net(€)", betModel.getTotalNet());
+            this.statsPanel.panelBody.appendChild(totalNet);
 
             var pieChart = document.createElement("div");
             pieChart.id = "container";
@@ -361,14 +388,18 @@
         betView: betView,
         betModel: betModel,
         dataExtractor: dataExtractor,
+        betCalculator: betCalculator,
 
         betLoaded: function(bet) {
             var result = dataExtractor.extract(bet);
+            var net = this.betCalculator.calculateProfit(bet);
+            result.net = net;
+
             this.betView.addBetToDisplay(result);
             betModel.addBet(result);
         },
 
-        uploadComplete: function(d) {        
+        uploadComplete: function(d) {
             this.betView.showMainEle();
             this.betView.createPanelView(d);
             this.betView.statsPanel.createPieChart();
@@ -411,7 +442,7 @@
                 self.totalAmountStaked += parseFloat(bet.stake);
             });
 
-            return this.totalAmountStaked;
+            return this.totalAmountStaked.toFixed(2);
         },
 
         getTotalAmountReturned: function(bet) {
@@ -422,7 +453,11 @@
                 self.totalAmountReturned += parseFloat(bet.return);
             });
 
-            return this.totalAmountReturned;
+            return this.totalAmountReturned.toFixed(2);
+        },
+
+        getTotalNet: function() {
+            return (this.totalAmountReturned - this.totalAmountStaked).toFixed(2);
         }
     }
 
