@@ -162,6 +162,11 @@
             betDiv.appendChild(eventDiv);
 
             return betDiv;
+        },
+
+        loadingData: function(e) {
+        	this.mask.show();
+        	this.spinner.show();
         }
     };
 

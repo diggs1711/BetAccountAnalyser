@@ -5,31 +5,26 @@
 
         var Loading = {
             mainEle: null,
-            loadingEle: null,
+            spinnerEle: null,
             init: function() {
                 this.initElements();
             },
 
             initElements: function() {
-                this.loadingEle = this.createSpinnerElement();
-            },
-
-            createSpinnerElement: function() {
-                var s = document.createElement("div");
-                s.className = "datepicker__spinner"
-                return s;
+                this.spinnerEle = document.querySelector(".js-spinner");
             },
 
             show: function() {
-                this.loadingEle.classList.remove("hidden");
+                this.spinnerEle.classList.remove("hidden");
             },
 
             hide: function() {
-                this.loadingEle.classList.add("hidden");
+                this.spinnerEle.classList.add("hidden");
             }
         };
 
         return Loading;
     })();
-    
+
+    module.exports = spinner;
 }();

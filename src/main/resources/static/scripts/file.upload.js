@@ -33,9 +33,11 @@
         },
 
         onUploadBtnClick: function(e) {
+
             if (this.input) {
                 this.input.click();
             }
+            pubSub.publish("loadingData", e);
             e.preventDefault();
             this.hideUploadBtn();
             pubSub.publish("uploadComplete", e);

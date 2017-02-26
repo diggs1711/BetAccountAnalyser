@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -176,8 +176,8 @@
 
 	var statsPanel = __webpack_require__(4);
 	var betModel = __webpack_require__(0);
-	var mask = __webpack_require__(9);
-	var spinner = __webpack_require__(10);
+	var mask = __webpack_require__(8);
+	var spinner = __webpack_require__(9);
 
 	var betView = {
         betResult: null,
@@ -336,6 +336,11 @@
             betDiv.appendChild(eventDiv);
 
             return betDiv;
+        },
+
+        loadingData: function(e) {
+        	this.mask.show();
+        	this.spinner.show();
         }
     };
 
@@ -516,7 +521,8 @@
             "betLoaded": [],
             "calculateProfit": [],
             "dataLoadComplete": [],
-            "uploadComplete": []
+            "uploadComplete": [],
+            "loadingData": [],
         },
 
         subscribe: function(e, fn, scope) {
@@ -571,6 +577,8 @@
         },
 
         uploadComplete: function(d) {
+            this.betView.mask.hide();
+            this.betView.spinner.hide();
             this.betView.showMainEle();
             this.betView.createPanelView(d);
             this.betView.statsPanel.createPieChart();
@@ -619,9 +627,11 @@
         },
 
         onUploadBtnClick: function(e) {
+
             if (this.input) {
                 this.input.click();
             }
+            pubSub.publish("loadingData", e);
             e.preventDefault();
             this.hideUploadBtn();
             pubSub.publish("uploadComplete", e);
@@ -654,31 +664,6 @@
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-;!function() {
-
-    var dataExtractor = __webpack_require__(3);
-    var fileUpload = __webpack_require__(7);
-    var pubSub = __webpack_require__(5);
-    var betCalculator = __webpack_require__(1);
-    var statsPanel = __webpack_require__(4);
-    var betModel = __webpack_require__(0);
-    var betController = __webpack_require__(6);
-    var betView = __webpack_require__(2);
-
-    fileUpload.init();
-    betView.init();
-
-    pubSub.subscribe("betLoaded", betController.betLoaded, betController);
-    pubSub.subscribe("calculateProfit", betCalculator.calculateProfit, betCalculator);
-    pubSub.subscribe("dataLoadComplete", betController.uploadComplete, betController);
-
-}();
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports) {
 
 ;!function() {
@@ -720,10 +705,10 @@
     })();
 
     module.exports = mask;
-}
+}();
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 ;!function() {
@@ -733,34 +718,55 @@
 
         var Loading = {
             mainEle: null,
-            loadingEle: null,
+            spinnerEle: null,
             init: function() {
                 this.initElements();
             },
 
             initElements: function() {
-                this.loadingEle = this.createSpinnerElement();
-            },
-
-            createSpinnerElement: function() {
-                var s = document.createElement("div");
-                s.className = "datepicker__spinner"
-                return s;
+                this.spinnerEle = document.querySelector(".js-spinner");
             },
 
             show: function() {
-                this.loadingEle.classList.remove("hidden");
+                this.spinnerEle.classList.remove("hidden");
             },
 
             hide: function() {
-                this.loadingEle.classList.add("hidden");
+                this.spinnerEle.classList.add("hidden");
             }
         };
 
         return Loading;
     })();
-    
+
+    module.exports = spinner;
 }();
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+;!function() {
+
+    var dataExtractor = __webpack_require__(3);
+    var fileUpload = __webpack_require__(7);
+    var pubSub = __webpack_require__(5);
+    var betCalculator = __webpack_require__(1);
+    var statsPanel = __webpack_require__(4);
+    var betModel = __webpack_require__(0);
+    var betController = __webpack_require__(6);
+    var betView = __webpack_require__(2);
+
+    fileUpload.init();
+    betView.init();
+
+    pubSub.subscribe("betLoaded", betController.betLoaded, betController);
+    pubSub.subscribe("calculateProfit", betCalculator.calculateProfit, betCalculator);
+    pubSub.subscribe("dataLoadComplete", betController.uploadComplete, betController);
+    pubSub.subscribe("loadingData", betView.loadingData, betView);
+
+}();
+
 
 /***/ })
 /******/ ]);

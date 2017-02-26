@@ -5,7 +5,8 @@
             "betLoaded": [],
             "calculateProfit": [],
             "dataLoadComplete": [],
-            "uploadComplete": []
+            "uploadComplete": [],
+            "loadingData": [],
         },
 
         subscribe: function(e, fn, scope) {

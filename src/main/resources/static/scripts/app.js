@@ -15,5 +15,6 @@
     pubSub.subscribe("betLoaded", betController.betLoaded, betController);
     pubSub.subscribe("calculateProfit", betCalculator.calculateProfit, betCalculator);
     pubSub.subscribe("dataLoadComplete", betController.uploadComplete, betController);
+    pubSub.subscribe("loadingData", betView.loadingData, betView);
 
 }();

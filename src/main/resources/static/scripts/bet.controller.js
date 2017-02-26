@@ -21,6 +21,8 @@
         },
 
         uploadComplete: function(d) {
+            this.betView.mask.hide();
+            this.betView.spinner.hide();
             this.betView.showMainEle();
             this.betView.createPanelView(d);
             this.betView.statsPanel.createPieChart();
