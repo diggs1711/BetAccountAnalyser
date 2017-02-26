@@ -1,22 +1,29 @@
 ;!function() {
 
 	var statsPanel = require('./panel.stats.js');
-	
+	var betModel = require('./bet.model.js');
+	var mask = require('./betview.mask.js');
+	var spinner = require('./betview.spinner.js');
+
 	var betView = {
         betResult: null,
         betEvent: null,
         statsPanel: statsPanel,
         mainEle: null,
+        mask: mask,
+        spinner: spinner,
 
         init: function() {
             this.initElements();
-            this.statsPanel.init();
         },
 
         initElements: function() {
             this.betDate = document.querySelector('.bet-date');
             this.betEvent = document.querySelector('.bet-event');
             this.mainEle = document.querySelector('.content');
+            this.mask.init();
+            this.statsPanel.init();
+            this.spinner.init();
         },
 
         createNewRow: function() {
