@@ -49,8 +49,7 @@
 
         onReaderLoad: function(e) {
             var obj = JSON.parse(e.target.result);
-						console.log(obj);
-            this.extractData(obj);
+            this.extractData(obj.bets);
         },
 
         extractData: function(data) {
