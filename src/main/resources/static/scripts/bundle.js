@@ -643,12 +643,14 @@
 
         onReaderLoad: function(e) {
             var obj = JSON.parse(e.target.result);
-            this.extractData(obj.bets);
+						console.log(obj);
+            this.extractData(obj);
         },
 
         extractData: function(data) {
             var self = this;
 
+						console.log(data);
             data.forEach(function(element, index) {
                 pubSub.publish("calculateProfit", [element]);
                 pubSub.publish("betLoaded", [element]);
@@ -661,6 +663,7 @@
 
     module.exports = fileUpload;
 }();
+
 
 /***/ }),
 /* 8 */
