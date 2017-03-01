@@ -364,9 +364,14 @@
             var betStake = data["bet_stake"];
             var betReturn = data["bet_return"];
 
-            var event = event.split("(");
-            var betEvent = event[0];
-            var market = event[1].replace(")", "");
+            console.log(event);
+
+            if(event) {
+              var event = event.split("(");
+              var betEvent = event[0];
+              var market = event[1].replace(")", "");
+            }
+
 
             output.date = betDate;
             output.event = betEvent;
@@ -649,7 +654,6 @@
         extractData: function(data) {
             var self = this;
 
-						console.log(data);
             data.forEach(function(element, index) {
                 pubSub.publish("calculateProfit", [element]);
                 pubSub.publish("betLoaded", [element]);

@@ -55,7 +55,6 @@
         extractData: function(data) {
             var self = this;
 
-						console.log(data);
             data.forEach(function(element, index) {
                 pubSub.publish("calculateProfit", [element]);
                 pubSub.publish("betLoaded", [element]);
