@@ -1,0 +1,6 @@
+# gradle stuff to ignore
+#Gradle
+.gradletasknamecache
+.gradle/
+build/
+bin/
